@@ -150,23 +150,25 @@ function load(attrVal, slideObj, event, radEventName) {
 
     var useBackground = slideObj.element.getAttribute('data-rad-colorizer-background');
     var useForeground = slideObj.element.getAttribute('data-rad-colorizer-foreground');
+
+    if(useBackground && !currentPalette.backgrounds[useBackground]) {
+        console.log('There is no ' + useBackground + ' background in the ' + currentPalette.name + ' palette');
+        useBackground = null;
+    }
     if(useBackground) {
-        if(!currentPalette.backgrounds[useBackground]) {
-            console.log('There is no ' + useBackground + ' background in the ' + currentPalette.name + ' palette');
-        } else {
-            slideObj.data.colorizer.background = { name: useBackground, color: currentPalette.backgrounds[useBackground] };
-        }
+        slideObj.data.colorizer.background = { name: useBackground, color: currentPalette.backgrounds[useBackground] };
+
         if(!useForeground) {
             slideObj.data.colorizer.foreground = getPairIndex(slideObj, null, useBackground);
         }
     }
 
+    if(useForeground && !currentPalette.foregrounds[useForeground]) {
+        console.log('There is no ' + useForeground + ' foreground in the ' + currentPalette.name + ' palette');
+        useForeground = null;
+    }
     if(useForeground) {
-        if(!currentPalette.foregrounds[useForeground]) {
-            console.log('There is no ' + useForeground + ' foreground in the ' + currentPalette.name + ' palette');
-        } else {
-            slideObj.data.colorizer.foreground = { name: useForeground, color: currentPalette.foregrounds[useForeground] };
-        }
+        slideObj.data.colorizer.foreground = { name: useForeground, color: currentPalette.foregrounds[useForeground] };
     }
 
     slideObj.element.className+= 

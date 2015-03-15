@@ -25,7 +25,7 @@ var palettes = {
             purple:   { black: 1, gray: 1, brown: 1, red: 1, green: 1, blue: 1 }
         }
     },
-    crayons: {
+    crayons: { //colors from http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors
         colors: { 
             red:     '#ee204d', 
             orange:  '#ff7538', 
@@ -72,7 +72,7 @@ var palettes = {
             white: { light: 1 }
         }
     },
-    wood: {
+    wood: { //colors from http://www.materialpalette.com/
         colors: {
             darkBrown:   '#5d4037',
             brown:       '#795548',
@@ -95,7 +95,7 @@ var palettes = {
         }
 
     },
-    sea: {
+    sea: { //colors from http://www.materialpalette.com/
         colors: {
             navy:     '#303f9f',
             deepSky:  '#03a9f4',
@@ -114,7 +114,7 @@ var palettes = {
             gray:     { navy: 1, lagoon: 1, seaGreen: 1 }
         }
     },
-    circus: {
+    circus: { //colors from http://www.materialpalette.com/
         colors: {
             black:     '#212121',
             blue:      '#536dfe',

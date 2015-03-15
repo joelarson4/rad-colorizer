@@ -154,6 +154,7 @@ function load(attrVal, slideObj, event, radEventName) {
     if(useBackground) {
         if(!currentPalette.backgrounds[useBackground]) {
             console.log('There is no ' + useBackground + ' background in the ' + currentPalette.name + ' palette');
+            useBackground = null;
         } else {
             slideObj.data.colorizer.background = { name: useBackground, color: currentPalette.backgrounds[useBackground] };
         }
@@ -165,6 +166,7 @@ function load(attrVal, slideObj, event, radEventName) {
     if(useForeground) {
         if(!currentPalette.foregrounds[useForeground]) {
             console.log('There is no ' + useForeground + ' foreground in the ' + currentPalette.name + ' palette');
+            useForeground = null;
         } else {
             slideObj.data.colorizer.foreground = { name: useForeground, color: currentPalette.foregrounds[useForeground] };
         }
