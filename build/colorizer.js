@@ -14,16 +14,7 @@ var counter = 0;
 var styleEle = null;
 var currentPalette = palettes.standard;
 
-function setupPalette(paletteObj) {
-    paletteObj.pairs = paletteObj.pairs || [];
-    paletteObj.foregrounds = paletteObj.foregrounds || paletteObj.colors;
-    paletteObj.backgrounds = paletteObj.backgrounds || paletteObj.colors;
-    paletteObj.dontPair = paletteObj.dontPair || {};
-    paletteObj.pairForBackground = {};
-    paletteObj.pairForForeground = {};
-    paletteObj.toHtml = function() { return generatePaletteHtml(this); };
-    palettes[paletteObj.name] = paletteObj;
-
+function setupPalettePairs(paletteObj) {
     Object.keys(paletteObj.foregrounds).sort().forEach(function(fore) {
         Object.keys(paletteObj.backgrounds).sort().forEach(function(back) {
             if(fore == back) return;
@@ -41,6 +32,29 @@ function setupPalette(paletteObj) {
             paletteObj.pairForForeground[fore].push(paletteObj.pairs.length - 1); //pairIndex
         });
     });
+}
+
+function setupPalette(paletteObj) {
+    if(!paletteObj.colors || Object.keys(paletteObj.colors).length < 3) {
+        console.log('Palettes must contain at least three colors; ' + paletteObj.name + ' doesn\'t; defaulting to standard colors');
+        paletteObj.colors = palettes.standard.colors;
+    }
+    paletteObj.pairs = paletteObj.pairs || [];
+    paletteObj.foregrounds = paletteObj.foregrounds || paletteObj.colors;
+    paletteObj.backgrounds = paletteObj.backgrounds || paletteObj.colors;
+    paletteObj.dontPair = paletteObj.dontPair || {};
+    paletteObj.pairForBackground = {};
+    paletteObj.pairForForeground = {};
+    paletteObj.toHtml = function() { return generatePaletteHtml(this); };
+    palettes[paletteObj.name] = paletteObj;
+
+    setupPalettePairs(paletteObj);
+
+    if(paletteObj.pairs < 3) {
+        console.log('Palettes must have at least three available pairs; ' + paletteObj.name + ' doesn\'t; ignoring dontPair.');
+        paletteObj.dontPair = {};
+        setupPalettePairs(paletteObj);
+    }
 
     var style = [];
     Object.keys(paletteObj.foregrounds).forEach(function(fore) {
@@ -59,6 +73,7 @@ function setupPalette(paletteObj) {
  foregrounds: [xxx, yyy, zzz],
  backgrounds: [xxx, yyy, zzz],
  pairs: [ { foreground: xxx, background: zzz }, { foreground: yyy, background: xxx} ]
+ palettes = { name : object }
 */
 function initialize(inputConfig, slides) {
     config = inputConfig || {};
@@ -66,10 +81,30 @@ function initialize(inputConfig, slides) {
     document.head.innerHTML += '<style id="rad-colorizer-css"></style>';
     styleEle = document.querySelector('#rad-colorizer-css');
 
+    if(typeof config.palettes === 'object') {
+        Object.keys(config.palettes).forEach(function(paletteName) {
+            palettes[paletteName] = config.palettes[paletteName];
+        });
+    }
+
+    if(typeof config.palette === 'object') {
+        var paletteName = config.palette.name || 'custom';
+        palettes[paletteName] = config.palette;
+        currentPalette = config.palette;
+    }
+
     Object.keys(palettes).forEach(function(paletteName) {
         palettes[paletteName].name = paletteName;
         setupPalette(palettes[paletteName]);
     });
+
+    if(typeof config.palette === 'string') {
+        if(palettes[config.palette]) {
+            currentPalette = palettes[config.palette];
+        } else {
+            console.log('There is no ' + config.palette + ' palette; using standard.');
+        }
+    }
 
     if(config.fillSlides) {
         slides.forEach(function(slide) {
@@ -151,25 +186,25 @@ function load(attrVal, slideObj, event, radEventName) {
 
     var useBackground = slideObj.element.getAttribute('data-rad-colorizer-background');
     var useForeground = slideObj.element.getAttribute('data-rad-colorizer-foreground');
+
+    if(useBackground && !currentPalette.backgrounds[useBackground]) {
+        console.log('There is no ' + useBackground + ' background in the ' + currentPalette.name + ' palette');
+        useBackground = null;
+    }
     if(useBackground) {
-        if(!currentPalette.backgrounds[useBackground]) {
-            console.log('There is no ' + useBackground + ' background in the ' + currentPalette.name + ' palette');
-            useBackground = null;
-        } else {
-            slideObj.data.colorizer.background = { name: useBackground, color: currentPalette.backgrounds[useBackground] };
-        }
+        slideObj.data.colorizer.background = { name: useBackground, color: currentPalette.backgrounds[useBackground] };
+
         if(!useForeground) {
             slideObj.data.colorizer.foreground = getPairIndex(slideObj, null, useBackground);
         }
     }
 
+    if(useForeground && !currentPalette.foregrounds[useForeground]) {
+        console.log('There is no ' + useForeground + ' foreground in the ' + currentPalette.name + ' palette');
+        useForeground = null;
+    }
     if(useForeground) {
-        if(!currentPalette.foregrounds[useForeground]) {
-            console.log('There is no ' + useForeground + ' foreground in the ' + currentPalette.name + ' palette');
-            useForeground = null;
-        } else {
-            slideObj.data.colorizer.foreground = { name: useForeground, color: currentPalette.foregrounds[useForeground] };
-        }
+        slideObj.data.colorizer.foreground = { name: useForeground, color: currentPalette.foregrounds[useForeground] };
     }
 
     slideObj.element.className+= 
@@ -230,7 +265,7 @@ var palettes = {
             purple:   { black: 1, gray: 1, brown: 1, red: 1, green: 1, blue: 1 }
         }
     },
-    crayons: {
+    crayons: { //colors from http://en.wikipedia.org/wiki/List_of_Crayola_crayon_colors
         colors: { 
             red:     '#ee204d', 
             orange:  '#ff7538', 
@@ -277,7 +312,7 @@ var palettes = {
             white: { light: 1 }
         }
     },
-    wood: {
+    wood: { //colors from http://www.materialpalette.com/
         colors: {
             darkBrown:   '#5d4037',
             brown:       '#795548',
@@ -300,7 +335,7 @@ var palettes = {
         }
 
     },
-    sea: {
+    sea: { //colors from http://www.materialpalette.com/
         colors: {
             navy:     '#303f9f',
             deepSky:  '#03a9f4',
@@ -319,7 +354,7 @@ var palettes = {
             gray:     { navy: 1, lagoon: 1, seaGreen: 1 }
         }
     },
-    circus: {
+    circus: { //colors from http://www.materialpalette.com/
         colors: {
             black:     '#212121',
             blue:      '#536dfe',

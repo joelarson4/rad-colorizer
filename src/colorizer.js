@@ -13,16 +13,7 @@ var counter = 0;
 var styleEle = null;
 var currentPalette = palettes.standard;
 
-function setupPalette(paletteObj) {
-    paletteObj.pairs = paletteObj.pairs || [];
-    paletteObj.foregrounds = paletteObj.foregrounds || paletteObj.colors;
-    paletteObj.backgrounds = paletteObj.backgrounds || paletteObj.colors;
-    paletteObj.dontPair = paletteObj.dontPair || {};
-    paletteObj.pairForBackground = {};
-    paletteObj.pairForForeground = {};
-    paletteObj.toHtml = function() { return generatePaletteHtml(this); };
-    palettes[paletteObj.name] = paletteObj;
-
+function setupPalettePairs(paletteObj) {
     Object.keys(paletteObj.foregrounds).sort().forEach(function(fore) {
         Object.keys(paletteObj.backgrounds).sort().forEach(function(back) {
             if(fore == back) return;
@@ -40,6 +31,29 @@ function setupPalette(paletteObj) {
             paletteObj.pairForForeground[fore].push(paletteObj.pairs.length - 1); //pairIndex
         });
     });
+}
+
+function setupPalette(paletteObj) {
+    if(!paletteObj.colors || Object.keys(paletteObj.colors).length < 3) {
+        console.log('Palettes must contain at least three colors; ' + paletteObj.name + ' doesn\'t; defaulting to standard colors');
+        paletteObj.colors = palettes.standard.colors;
+    }
+    paletteObj.pairs = paletteObj.pairs || [];
+    paletteObj.foregrounds = paletteObj.foregrounds || paletteObj.colors;
+    paletteObj.backgrounds = paletteObj.backgrounds || paletteObj.colors;
+    paletteObj.dontPair = paletteObj.dontPair || {};
+    paletteObj.pairForBackground = {};
+    paletteObj.pairForForeground = {};
+    paletteObj.toHtml = function() { return generatePaletteHtml(this); };
+    palettes[paletteObj.name] = paletteObj;
+
+    setupPalettePairs(paletteObj);
+
+    if(paletteObj.pairs < 3) {
+        console.log('Palettes must have at least three available pairs; ' + paletteObj.name + ' doesn\'t; ignoring dontPair.');
+        paletteObj.dontPair = {};
+        setupPalettePairs(paletteObj);
+    }
 
     var style = [];
     Object.keys(paletteObj.foregrounds).forEach(function(fore) {
@@ -58,6 +72,7 @@ function setupPalette(paletteObj) {
  foregrounds: [xxx, yyy, zzz],
  backgrounds: [xxx, yyy, zzz],
  pairs: [ { foreground: xxx, background: zzz }, { foreground: yyy, background: xxx} ]
+ palettes = { name : object }
 */
 function initialize(inputConfig, slides) {
     config = inputConfig || {};
@@ -65,10 +80,30 @@ function initialize(inputConfig, slides) {
     document.head.innerHTML += '<style id="rad-colorizer-css"></style>';
     styleEle = document.querySelector('#rad-colorizer-css');
 
+    if(typeof config.palettes === 'object') {
+        Object.keys(config.palettes).forEach(function(paletteName) {
+            palettes[paletteName] = config.palettes[paletteName];
+        });
+    }
+
+    if(typeof config.palette === 'object') {
+        var paletteName = config.palette.name || 'custom';
+        palettes[paletteName] = config.palette;
+        currentPalette = config.palette;
+    }
+
     Object.keys(palettes).forEach(function(paletteName) {
         palettes[paletteName].name = paletteName;
         setupPalette(palettes[paletteName]);
     });
+
+    if(typeof config.palette === 'string') {
+        if(palettes[config.palette]) {
+            currentPalette = palettes[config.palette];
+        } else {
+            console.log('There is no ' + config.palette + ' palette; using standard.');
+        }
+    }
 
     if(config.fillSlides) {
         slides.forEach(function(slide) {
