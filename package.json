@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "reveal.js": "3.0.0",
-    "rad-reveal": "0.0.5",
+    "rad-reveal": "0.0.6",
     "rad-randomizer": "0.0.3"
   },
   "devDependencies": {
