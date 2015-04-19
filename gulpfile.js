@@ -30,20 +30,29 @@ var browserifyIt = function(bopts, ropts, ignore) {
 };
 
 
-
-function test() {
+function testDemo() {
     return gulp.src('demo.html')
         .pipe(mochaPhantomJS());
 }
 
+function setupTestMisc(testNumber) {
+    return function() {
+        process.env.TEST_NUMBER = testNumber;
+        return gulp.src('misc.html')
+            .pipe(mochaPhantomJS());
+    };
+}
+
 //tasks
 gulp.task('default', function() {
-  gulp.watch('src/*.css', ['copy-css']);
-  gulp.watch('src/*.js', ['build']);
-  gulp.watch('demo.html', ['build']);
+    gulp.watch('src/*.css', ['copy-css']);
+    gulp.watch('src/*.js', ['build']);
+    gulp.watch('demo.html', ['build']);
 });
 
-gulp.task('release', ['build'], test);
+gulp.task('release', ['build'], function() {
+    gulp.start('test');
+});
 
 gulp.task('build', ['copy-css', 'gen-palette-doco'], function() {
     return gulp.src('src/colorizer.js')
@@ -73,4 +82,14 @@ gulp.task('gen-palette-doco', function() {
 });
 
 
-gulp.task('test', test);
+var tests = ['testDemo'];
+
+gulp.task('testDemo', testDemo);
+
+for(var testNumber = 0; testNumber < 3; testNumber++) {
+    var testName = 'testMisc_' + testNumber;
+    gulp.task(testName, [ tests[tests.length - 1] ], setupTestMisc(testNumber));
+    tests.push(testName);
+}
+
+gulp.task('test', [tests[tests.length - 1]]);

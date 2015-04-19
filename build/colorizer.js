@@ -298,11 +298,11 @@ var palettes = {
     },
     grayscale: {
         colors: { 
-            black: 'black', 
+            black: '#000', 
             dark:  '#444', 
             gray:  '#888', 
             light: '#ccc', 
-            white: 'white'
+            white: '#fff'
         },
         dontPair: {
             black: { dark: 1 },

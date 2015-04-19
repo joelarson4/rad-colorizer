@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>rad-reveal colorizer miscellaneous functionality</title>
+
+        <meta name="description" content="rad-colorizer miscellaneous functionality">
+        <meta name="author" content="Joe Larson">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="node_modules/reveal.js/css/reveal.css">
+        <link rel="stylesheet" href="node_modules/reveal.js/css/theme/simple.css" id="theme">
+        <link rel="stylesheet" href="build/colorizer.css">
+    </head>
+
+    <body>
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+<section>
+    <h1>Misc tests</h1>
+    <h2>This slideshow is just used to test miscellaneous features.</h2>
+</section>
+
+<section>
+    <h2>Misc tests are over</h2>
+    <p>Go home!</p>
+</section>
+        </div>
+
+        <script src="node_modules/reveal.js/lib/js/head.min.js"></script>
+        <script src="node_modules/reveal.js/js/reveal.js"></script>
+        <script src="node_modules/rad-reveal/build/radReveal.min.js"></script>
+        <script>
+            var paletteConfigs = [
+                { 
+                    palette: 'crayons', fillSlides: true
+                }, { 
+                    palette: { 
+                        name: 'dim',
+                        colors: { red: '#b00', blue: '#00b', green: '#0b0', cyan: '#088' },
+                        dontPair: { green: { cyan: 1 }, blue: { cyan: 1 }, cyan: { green: 1, blue: 1 } }
+                    }, 
+                    fillSlides: true
+                }, { 
+                    palette: { 
+                        name: 'dim-too-few-colors',
+                        colors: { red: '#b00', blue: '#00b' },
+                        dontPair: { green: { cyan: 1 }, blue: { cyan: 1 }, cyan: { green: 1, blue: 1 } }
+                    }, 
+                    fillSlides: true
+                }, { 
+                    palette: { 
+                        name: 'dim-too-few-pairs',
+                        colors: { red: '#b00', blue: '#00b', green: '#0b0', cyan: '#088' },
+                        dontPair: { green: { cyan: 1 }, blue: { cyan: 1, green: 1 }, cyan: { green: 1, blue: 1 } }
+                    }, 
+                    fillSlides: true
+                }, { 
+                    palettes: {
+                        dim: { 
+                          colors: { red: '#b00', blue: '#00b', green: '#0b0', cyan: '#088' },
+                          dontPair: { green: { cyan: 1 }, blue: { cyan: 1 }, cyan: { green: 1, blue: 1 } }
+                        },
+                        light: { 
+                          colors: { red: '#f66', blue: '#66f', green: '#6f6', cyan: '#6bb' },
+                          dontPair: { green: { cyan: 1 }, blue: { cyan: 1 }, cyan: { green: 1, blue: 1 } }
+                        }
+                    }, 
+                    fillSlides: true
+                }
+            ];
+
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: false,
+
+                dependencies: [
+                    { src: 'build/colorizer.js', radName: 'colorizer', radConfig: paletteConfigs[mochaPhantomJS.env.TEST_NUMBER] }
+                ]
+            });
+
+            var RadReveal = require('rad-reveal');
+            RadReveal.initialize();
+
+            Reveal.addEventListener('ready', function() {
+                RadReveal.on('data-rad-colorizer-palette', 'load', function(attrVal, slideObj, event, radEventName) {
+                    slideObj.element.innerHTML += slideObj.data.colorizer.palette.toHtml();
+                });
+            });
+            //run miscellaneous functionality if "test" is a url or path parameter, e.g. "demo.html?test"
+            head.js('node_modules/rad-reveal/test/maybeTest.js?test=test/miscTests.js');
+        </script>
+    </body>
+</html>
