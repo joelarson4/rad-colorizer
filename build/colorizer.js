@@ -13,6 +13,7 @@ var config;
 var counter = 0;
 var styleEle = null;
 var currentPalette = palettes.standard;
+var revealElement = document.querySelector('.reveal');
 
 function setupPalettePairs(paletteObj) {
     Object.keys(paletteObj.foregrounds).sort().forEach(function(fore) {
@@ -60,6 +61,22 @@ function setupPalette(paletteObj) {
     Object.keys(paletteObj.foregrounds).forEach(function(fore) {
         var selector = '.reveal .' + getClassName(paletteObj, 'fore', fore);
         style.push(selector + ',' + selector + ' * {color:' + paletteObj.foregrounds[fore] + ';}\n');
+
+        selector = '.reveal.' + getClassName(paletteObj, 'fore', fore) + ' .controls div.navigate-left';
+        style.push(selector + ',' + selector + '.enabled {border-right-color:' + paletteObj.foregrounds[fore] + ';}\n');
+
+        selector = '.reveal.' + getClassName(paletteObj, 'fore', fore) + ' .controls div.navigate-right';
+        style.push(selector + ',' + selector + '.enabled {border-left-color:' + paletteObj.foregrounds[fore] + ';}\n');
+
+        selector = '.reveal.' + getClassName(paletteObj, 'fore', fore) + ' .controls div.navigate-up';
+        style.push(selector + ',' + selector + '.enabled {border-bottom-color:' + paletteObj.foregrounds[fore] + ';}\n');
+
+        selector = '.reveal.' + getClassName(paletteObj, 'fore', fore) + ' .controls div.navigate-down'; 
+        style.push(selector + ',' + selector + '.enabled {border-top-color:' + paletteObj.foregrounds[fore] + ';}\n');
+
+        selector = '.reveal.' + getClassName(paletteObj, 'fore', fore) + ' .progress span';
+        style.push(selector + ' {background:' + paletteObj.foregrounds[fore] + ';}\n');
+
     });
     Object.keys(paletteObj.backgrounds).forEach(function(back) {
         var selector = '.reveal .backgrounds .' + getClassName(paletteObj, 'back', back);
@@ -167,6 +184,21 @@ function getPairIndex(slideObj, useForeground, useBackground) {
 }
 
 
+function show(attrVal, slideObj, event, radEventName) {
+    if(!slideObj.data.colorizer || !slideObj.data.colorizer.foreground || !slideObj.data.colorizer.palette) {
+        return;
+    }
+    revealElement.className += ' ' + getClassName(slideObj.data.colorizer.palette, 'fore', slideObj.data.colorizer.foreground.name);
+}
+
+function hide(attrVal, slideObj, event, radEventName) {
+    if(!slideObj.data.colorizer || !slideObj.data.colorizer.foreground || !slideObj.data.colorizer.palette) {
+        return;
+    }
+
+    revealElement.className = revealElement.className.replace(getClassName(slideObj.data.colorizer.palette, 'fore', slideObj.data.colorizer.foreground.name), '');
+}
+
 function load(attrVal, slideObj, event, radEventName) {
     slideObj.data.colorizer = slideObj.data.colorizer || { };
     var switchPalette = slideObj.element.getAttribute('data-rad-colorizer-palette');
@@ -218,6 +250,8 @@ function getClassName(palette, type, name) {
 
 RadReveal.register('colorizer', initialize);
 RadReveal.on('data-rad-colorizer', 'load', load);
+RadReveal.on('data-rad-colorizer', 'show', show);
+RadReveal.on('data-rad-colorizer', 'hide', hide);
 },{"./generatePaletteHtml":1,"./palettes":2,"rad-reveal":"rad-reveal"}],1:[function(require,module,exports){
 function generatePaletteHtml(paletteObj) {
     var html = [];
