@@ -1,10 +1,35 @@
+/*!
+ * rad-colorizer
+ * http://joelarson4.github.io/rad-colorizer
+ * MIT licensed
+ *
+ * Copyright (C) 2015 Joe Larson
+ */
+
+/** 
+ * @overview
+ * rad-colorizer is a Reveal.js RadReveal add-on for automatically adding background and foreground colors to your slides.
+ * Please see [project README](https://github.com/joelarson4/rad-colorizer) for an overview.
+ *
+ * This is not a true CommonJS module, you cannot `require()` it.  It should be loaded as a Reveal.js dependency.
+ *
+ *```javascript
+ * Reveal.initialize({
+ *    ...
+ *    dependencies: [
+ *        { src: '<some path>/colorizer.min.js', radName: 'colorizer' }
+ *    ...
+ *```
+ *
+ * @module colorizer
+ */
+
+//Developer note: we are not using jsdox to generate any markdown for this file; the API doesn't really suit it.  
+//  Some JsDoc is still provided for developer use
+
 var RadReveal = require('rad-reveal');
 var palettes = require('./palettes');
 var generatePaletteHtml = require('./generatePaletteHtml');
-
-//note: http://www.materialpalette.com/
-//note:http://jsbin.com/jabinozequ/1/edit?html,css,js,output
-//note:http://jsbin.com/pokiramihu
 
 var previousBodyClassName;
 var colors = [];
@@ -13,6 +38,57 @@ var counter = 0;
 var styleEle = null;
 var currentPalette = palettes.standard;
 var revealElement = document.querySelector('.reveal');
+
+
+/** 
+ * Runs when RadReveal initializes.
+ *
+ * @param {object} config - configuration object set in radConfig.  See README for details.
+ * @param {array} slides - all the slide objects
+ * @private
+ */
+function initialize(inputConfig, slides) {
+    config = inputConfig || {};
+
+    document.head.innerHTML += '<style id="rad-colorizer-css"></style>';
+    styleEle = document.querySelector('#rad-colorizer-css');
+
+    if(typeof config.palettes === 'object') {
+        Object.keys(config.palettes).forEach(function(paletteName) {
+            palettes[paletteName] = config.palettes[paletteName];
+        });
+    }
+
+    if(typeof config.palette === 'object') {
+        var paletteName = config.palette.name || 'custom';
+        palettes[paletteName] = config.palette;
+        currentPalette = config.palette;
+    }
+
+    Object.keys(palettes).forEach(function(paletteName) {
+        palettes[paletteName].name = paletteName;
+        setupPalette(palettes[paletteName]);
+    });
+
+    if(typeof config.palette === 'string') {
+        if(palettes[config.palette]) {
+            currentPalette = palettes[config.palette];
+        } else {
+            console.log('There is no ' + config.palette + ' palette; using standard.');
+        }
+    }
+
+    if(config.fillSlides) {
+        slides.forEach(function(slide) {
+            if(!slide.element.hasAttribute('data-rad-colorizer')) {
+                slide.element.setAttribute('data-rad-colorizer', config.fillSlides);
+            }
+        });
+    }
+}
+
+
+//palette initialization.
 
 function setupPalettePairs(paletteObj) {
     Object.keys(paletteObj.foregrounds).sort().forEach(function(fore) {
@@ -84,52 +160,8 @@ function setupPalette(paletteObj) {
     styleEle.innerHTML += style.join('');
 }
 
-/**
- colors: [xxx, yyy, zzz],
- foregrounds: [xxx, yyy, zzz],
- backgrounds: [xxx, yyy, zzz],
- pairs: [ { foreground: xxx, background: zzz }, { foreground: yyy, background: xxx} ]
- palettes = { name : object }
-*/
-function initialize(inputConfig, slides) {
-    config = inputConfig || {};
 
-    document.head.innerHTML += '<style id="rad-colorizer-css"></style>';
-    styleEle = document.querySelector('#rad-colorizer-css');
-
-    if(typeof config.palettes === 'object') {
-        Object.keys(config.palettes).forEach(function(paletteName) {
-            palettes[paletteName] = config.palettes[paletteName];
-        });
-    }
-
-    if(typeof config.palette === 'object') {
-        var paletteName = config.palette.name || 'custom';
-        palettes[paletteName] = config.palette;
-        currentPalette = config.palette;
-    }
-
-    Object.keys(palettes).forEach(function(paletteName) {
-        palettes[paletteName].name = paletteName;
-        setupPalette(palettes[paletteName]);
-    });
-
-    if(typeof config.palette === 'string') {
-        if(palettes[config.palette]) {
-            currentPalette = palettes[config.palette];
-        } else {
-            console.log('There is no ' + config.palette + ' palette; using standard.');
-        }
-    }
-
-    if(config.fillSlides) {
-        slides.forEach(function(slide) {
-            if(!slide.element.hasAttribute('data-rad-colorizer')) {
-                slide.element.setAttribute('data-rad-colorizer', config.fillSlides);
-            }
-        });
-    }
-}
+//randomization functionality:
 
 var actuallyRandom = {
     random: function(min, max) {
@@ -160,6 +192,15 @@ function getRandomPairIndex(slideObj, useForeground, useBackground) {
     return pairIndex;
 }
 
+
+/**
+ * Return a color pair index for a particular slide by using it's randomization attributes (either truly
+ * random or from rad-randomizer) and from the palette assigned to that slide.
+ *
+ * @param {object} slideObj - the RadReveal slide object
+ * @param {string=} useForeground - name of a color in the slide's palette foregrounds to force it to be used
+ * @param {string=} useBackground - name of a color in the slide's palette backgrounds to force it to be used
+ */
 function getPairIndex(slideObj, useForeground, useBackground) {
     var pairIndex = getRandomPairIndex(slideObj, useForeground, useBackground);
 
@@ -182,6 +223,8 @@ function getPairIndex(slideObj, useForeground, useBackground) {
     return pairIndex;
 }
 
+
+//core events
 
 function show(attrVal, slideObj, event, radEventName) {
     if(!slideObj.data.colorizer || !slideObj.data.colorizer.foreground || !slideObj.data.colorizer.palette) {
