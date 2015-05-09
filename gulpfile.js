@@ -13,6 +13,7 @@ var transform = require('vinyl-transform');
 var palettes = require('./src/palettes');
 var generatePaletteHtml = require('./src/generatePaletteHtml');
 var fs = require('fs');
+var webshot = require('webshot');
 
 var builddir = 'build/';
 
@@ -69,16 +70,30 @@ gulp.task('copy-css', function() {
 });
 
 gulp.task('gen-palette-doco', function() {
-    var out = ['#Colorizer built-in palettes'];
     var css = fs.readFileSync('src/colorizer.css');
+    var md = ['#Colorizer built-in palettes'];
     Object.keys(palettes).forEach(function(paletteName) {
-        out.push('##' + paletteName);
-        out.push('\n');
-        out.push(generatePaletteHtml(palettes[paletteName]));
-        out.push('\n<br><br><br><br>\n\n');
+        var paletteObj = palettes[paletteName];
+        var fileName = 'images/palette-' + paletteName + '.png';
+
+        md.push('\n\n##' + paletteName);
+        Object.keys(paletteObj.colors).sort().forEach(function(color) {
+            md.push('\n*' + color + ' = ' + paletteObj.colors[color]);
+        });
+        md.push('\n![foreground/background color combinations in the ' + paletteName + ' palette](../blob/master/' + fileName + '?raw=true)');
+
+        var html = ['<html><head>'];
+        html.push('<style>body{ background: white; font-family: sans-serif; font-size: 2em; }' + css + '</style>');
+        html.push('</head><body>');
+        html.push(generatePaletteHtml(paletteObj));
+        html.join('</body></html>');
+        webshot(
+            html.join(''), 
+            fileName, 
+            {siteType:'html', screenSize: { width: 480 }, quality: 100 }, 
+            function(err) { if(err) { console.log('Error'); } }
+        );
     });
-    out.push('<style>' + css + '</style>');
-    fs.writeFile('palettes.md', out.join(''));
 });
 
 
