@@ -47,7 +47,7 @@ Just add the `data-rad-randomizer` attribute to each slide and set it according 
 
 ##What if you want to use a specific background or foreground?
 
-Just add an attribute `data-rad-randomizer-background` and/or `data-rad-randomizer-foreground` and set it to the name of the color you want.
+Just add an attribute `data-rad-colorizer-background` and/or `data-rad-colorizer-foreground` and set it to the name of the color you want.
 
 ##What if you want to use a different color palette?
 
@@ -58,27 +58,27 @@ That palette will continue to be used for slides that follow.
 You can also specify that all slides use a particular palette from the start of the slideshow by setting `radConfig.palette` to the name of the palette you want when you load the script as a dependency:
 
 ```javascript
-  { src: 'node_modules/rad-colorizer/build/colorizer.js', radName: 'colorizer', 
-    radConfig: {
-      palette: 'crayons'
-    } 
-  }
+{ src: 'node_modules/rad-colorizer/build/colorizer.js', radName: 'colorizer', 
+  radConfig: {
+    palette: 'crayons'
+  } 
+}
 ```
 
 Or, you can define your own palette to use by setting `radConfig.palette` to a palette object:
 
 ```javascript
-  ...
-  { src: 'node_modules/rad-colorizer/build/colorizer.js', radName: 'colorizer', 
-    radConfig: {
-      palette: { 
-        name: 'dim',
-        colors: { red: '#b00', blue: '#00b', green: '#0b0', cyan: '#088' },
-        dontPair: { green: { cyan: 1 }, blue: { cyan: 1 }, cyan: { green: 1, blue: 1 } }
-      }
-    } 
-  }
-  ...
+...
+{ src: 'node_modules/rad-colorizer/build/colorizer.js', radName: 'colorizer', 
+  radConfig: {
+    palette: { 
+      name: 'dim',
+      colors: { red: '#b00', blue: '#00b', green: '#0b0', cyan: '#088' },
+      dontPair: { green: { cyan: 1 }, blue: { cyan: 1 }, cyan: { green: 1, blue: 1 } }
+    }
+  } 
+}
+...
 ```
 
 Palette objects have these properties:
