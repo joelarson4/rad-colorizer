@@ -96,6 +96,10 @@
         <code>data-rad-randomizer-foreground</code> set to the color value you want.</p>
 </section>
 
+<section data-rad-colorizer data-rad-colorizer-palette="warm">
+    <h2>Can you supply your own color palette?</h2>
+    <p class="fragment">Of course! This slide does. Check out the README.md for more information.</p>
+</section>
 
 <section data-rad-colorizer data-rad-randomizer="last">
     <h2>That's all folks</h2>
@@ -109,6 +113,13 @@
         <script src="node_modules/rad-reveal/build/radReveal.min.js"></script>
         <script>
 
+            var colorizerConfig = {
+                palette: { 
+                    name: 'warm',
+                    colors: { red: '#f40', orange: '#fb4', yellow: '#ff4', brown: '#b40' }
+                }
+            };
+
             Reveal.initialize({
                 controls: true,
                 progress: true,
@@ -117,7 +128,7 @@
 
                 dependencies: [
                     { src: 'node_modules/rad-randomizer/build/randomizer.min.js', radName: 'randomizer' },
-                    { src: 'build/colorizer.js', radName: 'colorizer' }
+                    { src: 'build/colorizer.js', radName: 'colorizer', radConfig: colorizerConfig }
                 ]
             });
 
@@ -126,6 +137,7 @@
 
             Reveal.addEventListener('ready', function() {
                 RadReveal.on('data-rad-colorizer-palette', 'load', function(attrVal, slideObj, event, radEventName) {
+                    if(slideObj.data.colorizer.palette.name == 'warm') { return; } //don't want to display for customized palette
                     slideObj.element.innerHTML += slideObj.data.colorizer.palette.toHtml();
                 });
             });
