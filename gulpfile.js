@@ -94,6 +94,7 @@ gulp.task('gen-palette-doco', function() {
             function(err) { if(err) { console.log('Error'); } }
         );
     });
+    fs.writeFile('palettes.md', md.join(''));
 });
 
 
