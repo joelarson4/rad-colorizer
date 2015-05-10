@@ -11,7 +11,7 @@
 *red = red
 *white = white
 *yellow = yellow
-![foreground/background color combinations in the standard palette](../blob/master/images/palette-standard.png?raw=true)
+![foreground/background color combinations in the standard palette](images/palette-standard.png?raw=true)
 
 ##crayons
 *black = #000000
@@ -27,7 +27,7 @@
 *red = #ee204d
 *white = #ffffff
 *yellow = #fce883
-![foreground/background color combinations in the crayons palette](../blob/master/images/palette-crayons.png?raw=true)
+![foreground/background color combinations in the crayons palette](images/palette-crayons.png?raw=true)
 
 ##grayscale
 *black = #000
@@ -35,7 +35,7 @@
 *gray = #888
 *light = #ccc
 *white = #fff
-![foreground/background color combinations in the grayscale palette](../blob/master/images/palette-grayscale.png?raw=true)
+![foreground/background color combinations in the grayscale palette](images/palette-grayscale.png?raw=true)
 
 ##wood
 *brown = #795548
@@ -46,7 +46,7 @@
 *lightGray = #d7ccc8
 *lightOrange = #ffe0b2
 *orange = #ffc107
-![foreground/background color combinations in the wood palette](../blob/master/images/palette-wood.png?raw=true)
+![foreground/background color combinations in the wood palette](images/palette-wood.png?raw=true)
 
 ##sea
 *deepGray = #212121
@@ -56,7 +56,7 @@
 *lightSky = #b3e5fc
 *navy = #303f9f
 *seaGreen = #009688
-![foreground/background color combinations in the sea palette](../blob/master/images/palette-sea.png?raw=true)
+![foreground/background color combinations in the sea palette](images/palette-sea.png?raw=true)
 
 ##circus
 *black = #212121
@@ -67,4 +67,4 @@
 *red = #f44336
 *white = #ffffff
 *yellow = #ffeb3b
-![foreground/background color combinations in the circus palette](../blob/master/images/palette-circus.png?raw=true)
+![foreground/background color combinations in the circus palette](images/palette-circus.png?raw=true)

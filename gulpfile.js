@@ -80,7 +80,7 @@ gulp.task('gen-palette-doco', function() {
         Object.keys(paletteObj.colors).sort().forEach(function(color) {
             md.push('\n*' + color + ' = ' + paletteObj.colors[color]);
         });
-        md.push('\n![foreground/background color combinations in the ' + paletteName + ' palette](../blob/master/' + fileName + '?raw=true)');
+        md.push('\n![foreground/background color combinations in the ' + paletteName + ' palette](' + fileName + '?raw=true)');
 
         var html = ['<html><head>'];
         html.push('<style>body{ background: white; font-family: sans-serif; font-size: 2em; }' + css + '</style>');
