@@ -51,7 +51,7 @@ gulp.task('default', function() {
     gulp.watch('demo.html', ['build']);
 });
 
-gulp.task('release', ['build'], function() {
+gulp.task('release', ['build', 'build-getRandomColorPair'], function() {
     gulp.start('test');
 });
 
@@ -60,6 +60,20 @@ gulp.task('build', ['copy-css', 'gen-palette-doco'], function() {
         .pipe(browserifyIt({ ignoreMissing: true }))
         .pipe(gulp.dest(builddir))
         .pipe(uglify())
+        .pipe(rename({ extname: '.min.js' }))
+        .pipe(gulp.dest(builddir));
+});
+
+gulp.task('build-getRandomColorPair', function() {
+    var filename = 'src/getRandomColorPair.js';
+
+    return gulp.src(filename)
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'))
+        .pipe(browserifyIt({ ignoreMissing: true }))
+        .pipe(browserifyIt(null, { expose: 'rad-colorizer-getrandomcolorpair' }))        
+        .pipe(gulp.dest(builddir))
+        .pipe(uglify({preserveComments: 'some'}))
         .pipe(rename({ extname: '.min.js' }))
         .pipe(gulp.dest(builddir));
 });

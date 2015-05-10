@@ -1,3 +1,4 @@
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var palettes = {
     standard: {
         colors: { 
@@ -139,3 +140,26 @@ var palettes = {
 };
 
 module.exports = palettes;
+},{}],"rad-colorizer-getrandomcolorpair":[function(require,module,exports){
+var palettes = require('./palettes');
+
+/** 
+ * Simple method for getting a pair of random colors via palette name.  Used by gh-pages index.html.
+ */
+function getRandomColorPair(paletteName) {
+    var paletteObj = palettes[paletteName];
+    var colorNames = Object.keys(paletteObj.colors);
+    var fore;
+    var back;
+    while(!fore || !back || fore == back || 
+      paletteObj.dontPair[fore][back] || paletteObj.dontPair[back][fore]) {
+        fore = colorNames[Math.floor(Math.random() * colorNames.length)];
+        back = colorNames[Math.floor(Math.random() * colorNames.length)];
+        console.log('try ' + fore + ' ' + back);
+    }
+    console.log('win ' + fore + ' ' + back);
+    return { foreground: fore, background: back };
+}
+
+module.exports = getRandomColorPair;
+},{"./palettes":1}]},{},["rad-colorizer-getrandomcolorpair"]);
