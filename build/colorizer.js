@@ -350,7 +350,7 @@ var palettes = {
             green:   '#1cac78', 
             blue:    '#1f75fe', 
             purple:  '#926eae',
-            black:   '#000000', 
+            black:   '#080808', 
             white:   '#ffffff', 
             gray:    '#95918c', 
             brown:   '#b4674d', 
@@ -361,16 +361,17 @@ var palettes = {
         dontPair: {
             red:      { orange: 1, green: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, magenta: 1, pink: 1 },
             orange:   { red: 1, green: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, magenta: 1, pink: 1 },
-            yellow:   { white: 1 },
+            yellow:   { white: 1, cyan: 1 },
             green:    { red: 1, orange: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, magenta: 1 },
-            blue:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1 },
-            purple:   { red: 1, orange: 1, green: 1, blue: 1, gray: 1, brown: 1, cyan: 1, magenta: 1 },
+            blue:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1, black: 1 },
+            purple:   { red: 1, orange: 1, green: 1, blue: 1, gray: 1, brown: 1, cyan: 1, magenta: 1, black: 1 },
             white:    { yellow: 1 },
             gray:     { red: 1, orange: 1, green: 1, blue: 1, purple: 1, brown: 1, cyan: 1, magenta: 1 },
-            brown:    { red: 1, orange: 1, green: 1, blue: 1, purple: 1, gray: 1, cyan: 1, magenta: 1 },
-            cyan:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1, pink: 1 },
+            brown:    { red: 1, orange: 1, green: 1, blue: 1, purple: 1, gray: 1, cyan: 1, magenta: 1, black: 1 },
+            cyan:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1, pink: 1, yellow: 1 },
             magenta:  { red: 1, orange: 1, green: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, pink: 1 },
-            pink:     { red: 1, orange: 1, cyan: 1, magenta: 1 }
+            pink:     { red: 1, orange: 1, cyan: 1, magenta: 1 },
+            black:    { purple: 1, brown: 1, blue: 1 }
         }
     },
     grayscale: {

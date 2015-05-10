@@ -15,7 +15,7 @@
 ![foreground/background color combinations in the standard palette](images/palette-standard.png?raw=true)
 
 ##`crayons` palette
-* black: #000000
+* black: #080808
 * blue: #1f75fe
 * brown: #b4674d
 * cyan: #64aff6

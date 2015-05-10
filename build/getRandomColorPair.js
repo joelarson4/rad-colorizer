@@ -34,7 +34,7 @@ var palettes = {
             green:   '#1cac78', 
             blue:    '#1f75fe', 
             purple:  '#926eae',
-            black:   '#000000', 
+            black:   '#080808', 
             white:   '#ffffff', 
             gray:    '#95918c', 
             brown:   '#b4674d', 
@@ -45,16 +45,17 @@ var palettes = {
         dontPair: {
             red:      { orange: 1, green: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, magenta: 1, pink: 1 },
             orange:   { red: 1, green: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, magenta: 1, pink: 1 },
-            yellow:   { white: 1 },
+            yellow:   { white: 1, cyan: 1 },
             green:    { red: 1, orange: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, magenta: 1 },
-            blue:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1 },
-            purple:   { red: 1, orange: 1, green: 1, blue: 1, gray: 1, brown: 1, cyan: 1, magenta: 1 },
+            blue:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1, black: 1 },
+            purple:   { red: 1, orange: 1, green: 1, blue: 1, gray: 1, brown: 1, cyan: 1, magenta: 1, black: 1 },
             white:    { yellow: 1 },
             gray:     { red: 1, orange: 1, green: 1, blue: 1, purple: 1, brown: 1, cyan: 1, magenta: 1 },
-            brown:    { red: 1, orange: 1, green: 1, blue: 1, purple: 1, gray: 1, cyan: 1, magenta: 1 },
-            cyan:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1, pink: 1 },
+            brown:    { red: 1, orange: 1, green: 1, blue: 1, purple: 1, gray: 1, cyan: 1, magenta: 1, black: 1 },
+            cyan:     { red: 1, orange: 1, green: 1, purple: 1, gray: 1, brown: 1, magenta: 1, pink: 1, yellow: 1 },
             magenta:  { red: 1, orange: 1, green: 1, blue: 1, purple: 1, gray: 1, brown: 1, cyan: 1, pink: 1 },
-            pink:     { red: 1, orange: 1, cyan: 1, magenta: 1 }
+            pink:     { red: 1, orange: 1, cyan: 1, magenta: 1 },
+            black:    { purple: 1, brown: 1, blue: 1 }
         }
     },
     grayscale: {
@@ -146,13 +147,14 @@ var palettes = require('./palettes');
 /** 
  * Simple method for getting a pair of random colors via palette name.  Used by gh-pages index.html.
  */
-function getRandomColorPair(paletteName) {
+function getRandomColorPair(paletteName, skip) {
     var paletteObj = palettes[paletteName];
     var colorNames = Object.keys(paletteObj.colors);
     var fore;
     var back;
     while(!fore || !back || fore == back || 
-      paletteObj.dontPair[fore][back] || paletteObj.dontPair[back][fore]) {
+      paletteObj.dontPair[fore][back] || paletteObj.dontPair[back][fore] ||
+      skip[fore] || skip[back]) {
         fore = colorNames[Math.floor(Math.random() * colorNames.length)];
         back = colorNames[Math.floor(Math.random() * colorNames.length)];
         console.log('try ' + fore + ' ' + back);

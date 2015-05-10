@@ -3,13 +3,14 @@ var palettes = require('./palettes');
 /** 
  * Simple method for getting a pair of random colors via palette name.  Used by gh-pages index.html.
  */
-function getRandomColorPair(paletteName) {
+function getRandomColorPair(paletteName, skip) {
     var paletteObj = palettes[paletteName];
     var colorNames = Object.keys(paletteObj.colors);
     var fore;
     var back;
     while(!fore || !back || fore == back || 
-      paletteObj.dontPair[fore][back] || paletteObj.dontPair[back][fore]) {
+      paletteObj.dontPair[fore][back] || paletteObj.dontPair[back][fore] ||
+      skip[fore] || skip[back]) {
         fore = colorNames[Math.floor(Math.random() * colorNames.length)];
         back = colorNames[Math.floor(Math.random() * colorNames.length)];
         console.log('try ' + fore + ' ' + back);
