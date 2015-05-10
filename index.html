@@ -59,7 +59,8 @@
 <script>
 (function() {
     var getRandomColorPair = require('rad-colorizer-getrandomcolorpair');
-    var pair = getRandomColorPair('circus');
+    var pair = getRandomColorPair('crayons', { black: 1, white: 1, gray: 1});
+
     document.querySelector('#main_content_wrap').style.backgroundColor = pair.background;
     document.querySelector('#main_content_wrap').style.color = pair.foreground;
     document.querySelector('#main_content_wrap h3').style.color = pair.foreground;
