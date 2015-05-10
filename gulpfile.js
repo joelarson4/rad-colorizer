@@ -76,11 +76,11 @@ gulp.task('gen-palette-doco', function() {
         var paletteObj = palettes[paletteName];
         var fileName = 'images/palette-' + paletteName + '.png';
 
-        md.push('\n\n##' + paletteName);
+        md.push('\n\n##`' + paletteName + '` palette');
         Object.keys(paletteObj.colors).sort().forEach(function(color) {
-            md.push('\n* ' + color + ' = ' + paletteObj.colors[color]);
+            md.push('\n* ' + color + ': ' + paletteObj.colors[color]);
         });
-        md.push('\n![foreground/background color combinations in the ' + paletteName + ' palette](' + fileName + '?raw=true)');
+        md.push('\n\n![foreground/background color combinations in the ' + paletteName + ' palette](' + fileName + '?raw=true)');
 
         var paletteHtml = generatePaletteHtml(paletteObj);
 
