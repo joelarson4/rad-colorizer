@@ -52,8 +52,7 @@ Just add an attribute `data-rad-colorizer-background` and/or `data-rad-colorizer
 ##What if you want to use a different color palette?
 
 rad-colorizer ships with [several built-in palettes](palettes.md).
-Add the `data-rad-colorizer-pallete` attribute to a slide and set it to one of the available palettes.  
-That palette will continue to be used for slides that follow.  
+Add the `data-rad-colorizer-pallete` attribute to a slide and set it to one of the available palettes.  That palette will continue to be used for slides that follow.  
 
 You can also specify that all slides use a particular palette from the start of the slideshow by setting `radConfig.palette` to the name of the palette you want when you load the script as a dependency:
 
