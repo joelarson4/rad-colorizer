@@ -78,19 +78,31 @@ gulp.task('gen-palette-doco', function() {
 
         md.push('\n\n##' + paletteName);
         Object.keys(paletteObj.colors).sort().forEach(function(color) {
-            md.push('\n*' + color + ' = ' + paletteObj.colors[color]);
+            md.push('\n* ' + color + ' = ' + paletteObj.colors[color]);
         });
         md.push('\n![foreground/background color combinations in the ' + paletteName + ' palette](' + fileName + '?raw=true)');
 
+        var paletteHtml = generatePaletteHtml(paletteObj);
+
         var html = ['<html><head>'];
-        html.push('<style>body{ background: white; font-family: sans-serif; font-size: 2em; }' + css + '</style>');
+        html.push('<style>body{ background: white; font-family: sans-serif; font-size: 2em; height: 300px; }' + css + '</style>');
         html.push('</head><body>');
-        html.push(generatePaletteHtml(paletteObj));
+        html.push(paletteHtml);
         html.join('</body></html>');
+
+        //lazy stuff here
+        var rows = Math.ceil( (paletteHtml.split('colorizer-palette-pair').length - 1) / 8);
+        var height = rows * 58 + 14; //yeah, magic numbers, whatever
+
         webshot(
             html.join(''), 
             fileName, 
-            {siteType:'html', screenSize: { width: 480 }, quality: 100 }, 
+            { 
+                siteType:'html', 
+                windowSize: { width: 480, height: height }, 
+                shotSize: { width: 480, height: height }, 
+                quality: 100
+            }, 
             function(err) { if(err) { console.log('Error'); } }
         );
     });
